@@ -6,13 +6,9 @@ import { Plus, Trash2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Todo } from "@/lib/types";
 
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  created_at: string;
-}
+
 
 export default function TodoPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
