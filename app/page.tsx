@@ -2,14 +2,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Cloud, Pencil } from "lucide-react";
-import Navbar from "@/components/Navbar";
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {/* Navbar */}
-      <Navbar />
-
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-24 lg:flex lg:items-center lg:justify-between lg:gap-12">
         <div className="lg:max-w-lg">

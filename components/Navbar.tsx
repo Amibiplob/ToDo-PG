@@ -9,7 +9,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <ListTodo className="h-6 w-6 text-primary" />
-          <span className="text-xl font-bold">Todo PG</span>
+          <Link href="/" className="text-xl font-bold">Todo PG</Link>
         </div>
 
         {/* Links */}
