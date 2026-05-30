@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { Eye, EyeOff, ListTodo } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +14,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ListTodo } from "lucide-react";
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
       <Card className="w-full max-w-md">
@@ -38,7 +44,28 @@ export default function LoginPage() {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
 
-              <Input id="password" type="password" placeholder="••••••••" />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="pr-10"
+                />
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
             </div>
 
             <Button className="w-full">Sign In</Button>
@@ -54,7 +81,7 @@ export default function LoginPage() {
               href="/register"
               className="font-medium text-primary hover:underline"
             >
-              Sign up
+              Sign Up
             </Link>
           </div>
         </CardContent>
