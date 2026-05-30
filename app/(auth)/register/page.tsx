@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff, ListTodo } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +17,59 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Something went wrong");
+        return;
+      }
+
+      router.push("/login"); // or /todos after login system
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      setError("Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
@@ -30,24 +82,39 @@ export default function RegisterPage() {
           <CardTitle className="text-2xl">Create Account</CardTitle>
 
           <CardDescription>
-            Create an account to sync your todos across devices.
+            Create an account to manage your todos.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
+            {/* Username */}
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-
-              <Input id="name" type="text" placeholder="John Doe" />
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="john_doe"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
             </div>
 
+            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-
-              <Input id="email" type="email" placeholder="john@example.com" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
 
@@ -57,13 +124,14 @@ export default function RegisterPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Minimum 6 characters"
                   className="pr-10"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
 
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -71,10 +139,11 @@ export default function RegisterPage() {
                   ) : (
                     <Eye className="h-4 w-4" />
                   )}
-                </Button>
+                </button>
               </div>
             </div>
 
+            {/* Confirm Password */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
 
@@ -82,15 +151,16 @@ export default function RegisterPage() {
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Re-enter your password"
+                  placeholder="Re-enter password"
                   className="pr-10"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
 
-                <Button
+                <button
                   type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
@@ -98,23 +168,30 @@ export default function RegisterPage() {
                   ) : (
                     <Eye className="h-4 w-4" />
                   )}
-                </Button>
+                </button>
               </div>
             </div>
 
-            <Button className="w-full">Create Account</Button>
+            {/* Error */}
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
 
+            {/* Submit */}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account"}
+            </Button>
+
+            {/* Guest */}
             <Button type="button" variant="outline" className="w-full" asChild>
               <Link href="/todo">Continue as Guest</Link>
             </Button>
           </form>
 
+          {/* Login link */}
           <div className="mt-6 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-medium text-primary hover:underline"
-            >
+            <Link href="/login" className="font-medium text-primary hover:underline">
               Sign In
             </Link>
           </div>

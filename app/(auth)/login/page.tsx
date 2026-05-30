@@ -16,7 +16,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    console.log(email, password);
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
@@ -34,11 +43,18 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
 
-              <Input id="email" type="email" placeholder="john@example.com" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
 
             <div className="space-y-2">
@@ -50,13 +66,16 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   className="pr-10"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
 
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
+                  className="absolute right-1"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -68,10 +87,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button className="w-full">Sign In</Button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing In..." : "Sign In"}
+            </Button>
 
             <Button type="button" variant="outline" className="w-full" asChild>
-              <Link href="/todo">Continue as Guest</Link>
+              <Link href="/todos">Continue as Guest</Link>
             </Button>
           </form>
 
