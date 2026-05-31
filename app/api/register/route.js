@@ -1,28 +1,24 @@
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { sql } from "@/lib/db";
+import pool from "@/lib/db";
 
-export async function POST(req) {
-  try {
-    const { username, email, password } = await req.json();
+export async function POST(req: NextRequest) {
+  const { name, email, password } = await req.json();
 
-    // 1. Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // 2. Insert into database
-    const user = await sql`
-      INSERT INTO users (username, email, password)
-      VALUES (${username}, ${email}, ${hashedPassword})
-      RETURNING id, username, email, created_at
-    `;
-
-    return Response.json({
-      message: "User created successfully",
-      user: user[0],
-    });
-  } catch (err) {
-    return Response.json(
-      { error: "User already exists or invalid data" },
-      { status: 400 }
-    );
+  if (!name || !email || !password) {
+    return NextResponse.json({ error: "All fields required" }, { status: 400 });
   }
+
+  const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
+  if (existing.rows.length > 0) {
+    return NextResponse.json({ error: "Email already in use" }, { status: 409 });
+  }
+
+  const hashed = await bcrypt.hash(password, 12);
+  await pool.query(
+    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
+    [name, email, hashed]
+  );
+
+  return NextResponse.json({ message: "User created successfully",}, { status: 201 });
 }
