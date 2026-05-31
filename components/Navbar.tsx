@@ -1,52 +1,52 @@
-"use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ListTodo } from "lucide-react";
-import { useSession } from "next-auth/react";
 
-export default function Navbar() {
-  const { data: session, status } = useSession();
+import { signOut } from "next-auth/react";
+
+export default async function Navbar() {
+  const session = true;
+
   return (
-    <header className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <ListTodo className="h-6 w-6 text-primary" />
-          <Link href="/" className="text-xl font-bold">
-            Todo PG
-          </Link>
-        </div>
+    <nav className="border-b bg-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1">
+        {/* Left Side */}
+        <Link href="/" className="text-xl font-bold text-blue-600">
+          Todo App
+        </Link>
 
-        {/* Links */}
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
-
-          <Button asChild>
-            <Link href="/register">Sign Up</Link>
-          </Button>
-        </div>
+        {/* Right Side */}
         <div className="flex items-center gap-4">
-          {status === "loading" ? (
-            <span className="text-sm text-gray-400">Loading...</span>
-          ) : session?.user ? (
+          {session?.user ? (
             <>
-              <span className="text-sm font-medium text-gray-700">
-                👋 {session.user.name}
+              <Link
+                href="/todos"
+                className="font-medium text-gray-700 hover:text-blue-600"
+              >
+                Todos
+              </Link>
+
+              <span className="font-medium text-gray-600">
+                Hello, {session.user.name}
               </span>
-              <button className="text-sm text-red-500 hover:underline">
-                Sign out
+
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+              >
+                Logout
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="text-sm hover:underline">
+              <Link
+                href="/login"
+                className="font-medium text-gray-700 hover:text-blue-600"
+              >
                 Login
               </Link>
+
               <Link
                 href="/register"
-                className="text-sm bg-black text-white px-4 py-1.5 rounded-md hover:bg-gray-800"
+                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
               >
                 Register
               </Link>
@@ -54,6 +54,6 @@ export default function Navbar() {
           )}
         </div>
       </div>
-    </header>
+    </nav>
   );
 }
