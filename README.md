@@ -1,6 +1,22 @@
 # ToDo PG
 
+> 🎓 **Learning Project** — Built to practice **PostgreSQL** with Next.js. This is a hands-on experiment exploring raw `pg` queries, Neon cloud database, and NextAuth JWT auth — no ORM, no abstractions, just SQL.
+
 A full-stack **Todo application** built with **Next.js App Router**, **PostgreSQL (Neon)**, **NextAuth v4** (JWT, Credentials), and **Server Actions**. Users can register, log in, and manage their personal todos — all stored securely in a cloud PostgreSQL database.
+
+---
+
+## Why I Built This
+
+I'm learning **PostgreSQL** from scratch and wanted a real project to practice on instead of just following tutorials. This app covers the things I wanted to understand:
+
+- Writing raw SQL queries (no Prisma, no Drizzle)
+- Connecting to a cloud PostgreSQL database (Neon)
+- Handling user authentication with hashed passwords
+- Scoping database records to individual users
+- Running server-side logic with Next.js Server Actions
+
+If you're also learning PostgreSQL with Next.js, this project might help you too.
 
 ---
 
@@ -123,6 +139,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ---
 
 ## Known Bugs & Issues
+
+> This is a learning project, so known bugs are documented here intentionally — they're part of the learning process.
 
 ### Bug 1 — `NEXTAUTH_SECRET` not set → silent JWT failure
 
