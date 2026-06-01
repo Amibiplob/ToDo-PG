@@ -5,14 +5,14 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <nav className="border-b bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-1">
         {/* Left Side */}
         <Link href="/" className="text-xl font-bold text-blue-600">
-          Todo App
+          ToDo PG
         </Link>
 
         {/* Right Side */}
