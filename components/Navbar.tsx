@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
-export default async function Navbar() {
-  const session = true;
+export default function Navbar() {
+  const { data: session, status } = useSession();
 
   return (
     <nav className="border-b bg-white">
